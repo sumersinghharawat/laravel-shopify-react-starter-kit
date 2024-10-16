@@ -1,9 +1,3 @@
-## Tech Stack
-
-![Laravel Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Laravel_logo.svg/800px-Laravel_logo.svg.png)
-![Shopify Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shopify_logo_2018.svg/1024px-Shopify_logo_2018.svg.png)
-![React Logo](https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg)
-
 # Laravel-Inertia-React Boilerplate Documentation
 
 ## Project Setup
