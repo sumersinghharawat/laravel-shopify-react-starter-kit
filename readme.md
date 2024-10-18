@@ -175,6 +175,12 @@ Then, in a separate terminal, run:
 npm run dev
 ```
 
+also put the following in your AppServiceProvider.php boot function if your using ngrok or any other tunnel configuration
+
+```php
+\URL::forceScheme('https');
+```
+
 ## 13. Accessing the Application
 
 You can access your application at:
