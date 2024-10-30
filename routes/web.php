@@ -1,7 +1,5 @@
 <?php
 
-Route::get('/', function () {
+Route::get('/' , function () {
     return view('welcome');
-})->name('welcome');
-
-require __DIR__ . '/auth.php';
+})->name('home');
