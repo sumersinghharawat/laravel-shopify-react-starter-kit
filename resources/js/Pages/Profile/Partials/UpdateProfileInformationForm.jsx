@@ -12,6 +12,9 @@ export default function UpdateProfileInformation({
 }) {
     const user = usePage().props.auth.user;
 
+    const page = usePage().props
+    const { query } = page.ziggy;
+
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
             name: user.name,
@@ -21,7 +24,7 @@ export default function UpdateProfileInformation({
     const submit = (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'));
+        patch(route('profile.update', query));
     };
 
     return (
