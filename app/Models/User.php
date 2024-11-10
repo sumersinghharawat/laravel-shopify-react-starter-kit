@@ -8,12 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Osiset\ShopifyApp\Contracts\ShopModel as IShopModel;
 use Osiset\ShopifyApp\Traits\ShopModel;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements IShopModel
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
     use ShopModel;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.

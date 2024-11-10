@@ -1,4 +1,7 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import ApplicationLogo from '@/Components/ApplicationLogo';
+import PrimaryButton from '@/Components/PrimaryButton';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     const page = usePage().props
@@ -15,12 +18,23 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
         document.getElementById('background')?.classList.add('!hidden');
     };
 
+    useEffect(() => {
 
+    });
+
+    const handleGetStartedClick = () => {
+
+        if (auth.user) {
+            return router.get(route('vendor.dashboard'));
+        }
+
+        return router.get(route('dashboard'), query);
+    };
 
     return (
         <>
             <Head title="Welcome" />
-            <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+            {/* <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
                 <img
                     id="background"
                     className="absolute -left-20 top-0 max-w-[877px]"
@@ -28,7 +42,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                 />
                 <div className="relative flex min-h-screen flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
                     <div className="relative w-full max-w-2xl px-6 lg:max-w-7xl">
-                        <header className="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
+                        <header className="grid items-center grid-cols-2 gap-2 py-10 lg:grid-cols-3">
                             <div className="flex lg:col-start-2 lg:justify-center">
                                 <svg
                                     className="h-12 w-auto text-white lg:h-16 lg:text-[#FF2D20]"
@@ -42,7 +56,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                     />
                                 </svg>
                             </div>
-                            <nav className="-mx-3 flex flex-1 justify-end">
+                            <nav className="flex justify-end flex-1 -mx-3">
                                 {auth.user ? (
                                     <Link
                                         href={route('dashboard', query)}
@@ -78,7 +92,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                 >
                                     <div
                                         id="screenshot-container"
-                                        className="relative flex w-full flex-1 items-stretch"
+                                        className="relative flex items-stretch flex-1 w-full"
                                     >
                                         <img
                                             src="https://laravel.com/assets/img/welcome/docs-light.svg"
@@ -355,11 +369,16 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                             </div>
                         </main>
 
-                        <footer className="py-16 text-center text-sm text-black dark:text-white/70">
+                        <footer className="py-16 text-sm text-center text-black dark:text-white/70">
                             Laravel v{laravelVersion} (PHP v{phpVersion})
                         </footer>
                     </div>
                 </div>
+            </div> */}
+            <div className="flex flex-col items-center justify-center min-h-screen gap-6">
+                <ApplicationLogo />
+                <p>Welcome to the Integrity Wardrobe App</p>
+                <PrimaryButton onClick={handleGetStartedClick}>Get Started</PrimaryButton>
             </div>
         </>
     );

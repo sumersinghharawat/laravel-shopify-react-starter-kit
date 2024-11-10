@@ -70,6 +70,7 @@ trait ShopifyAuthTrait
             );
         } else {
             $user_id = $result['shop_id']->toNative();
+
             if($request->has('hmac') && $request->has('host')){
                 $user = User::find($user_id);
                 // $user->update([
@@ -78,7 +79,13 @@ trait ShopifyAuthTrait
                 //     // 'plan_id' => !$user->plan_id ? 1 : $user->plan_id
                 // ]);
             }
+
             auth()->loginUsingId($user_id);
+
+            $user = User::find($user_id);
+
+            $user->assignRole('vendor');
+
             return redirect()->intended(RouteServiceProvider::$home);
 
         }
@@ -109,8 +116,13 @@ trait ShopifyAuthTrait
             $params = ['shop' => $shopDomain->toNative() ?? '', 'host' => $request->get('host')];
             $cleanTarget = trim(explode('?', $target)[0] . '?' . http_build_query($params), '?');
         }
+
         $user = User::firstWhere('name', $shopDomain->toNative());
+
         auth()->login($user);
+
+        $user->assignRole('vendor');
+
         return redirect()->intended(RouteServiceProvider::$home);
     }
 }

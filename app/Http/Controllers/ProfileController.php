@@ -4,15 +4,62 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProfileController extends Controller
 {
+
+    public function __construct()
+    {
+
+    }
+
+    public function welcome(){
+
+        if(Auth::user()){
+
+            $user = Auth::user();
+
+            $roles = $user->getRoleNames();
+
+            // return redirect(route($roles[0].'.dashboard'));
+        }
+
+        return Inertia::render('Welcome', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+            'auth' => [
+                'user' => Auth::user(),
+            ],
+        ]);
+    }
+
+
+    public function index()
+    {
+
+        $user = Auth::user();
+
+        $roles = $user->getRoleNames();
+
+        if(!count( $roles)){
+            $user->assignRole('vendor');
+
+            return redirect(route($roles[0].'.dashboard', absolute: false));
+        }
+
+        return Inertia::render('Dashboard');
+    }
+
     /**
      * Display the user's profile form.
      */
