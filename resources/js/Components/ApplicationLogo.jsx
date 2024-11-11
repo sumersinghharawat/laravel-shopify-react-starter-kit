@@ -2,7 +2,7 @@ import logo from '../../images/logo.png';
 
 export default function ApplicationLogo(props) {
     return (
-        <img src={logo} alt="Logo" {...props} />
+        <img src={logo} alt="Logo" {...props} width={'100%'} height={'100%'} className='object-contain w-full h-full' />
         // <svg
         //     {...props}
         //     viewBox="0 0 316 316"

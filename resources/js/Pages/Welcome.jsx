@@ -19,13 +19,20 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
     };
 
     useEffect(() => {
+        // if (document.cookie.includes('visited')) {
+            if (auth.user) {
+                router.get(route(auth.user.roles[0].name+'.dashboard'));
+            }
+        // }else{
+        //     document.cookie = "visited=true; path=/";
+        // }
 
-    });
+    },[]);
 
     const handleGetStartedClick = () => {
 
         if (auth.user) {
-            return router.get(route('vendor.dashboard'));
+            return router.get(route(auth.user.roles[0].name+'.dashboard'));
         }
 
         return router.get(route('dashboard'), query);
@@ -376,7 +383,9 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                 </div>
             </div> */}
             <div className="flex flex-col items-center justify-center min-h-screen gap-6">
-                <ApplicationLogo />
+                <div className='flex items-center justify-center w-60 h-60'>
+                    <ApplicationLogo />
+                </div>
                 <p>Welcome to the Integrity Wardrobe App</p>
                 <PrimaryButton onClick={handleGetStartedClick}>Get Started</PrimaryButton>
             </div>

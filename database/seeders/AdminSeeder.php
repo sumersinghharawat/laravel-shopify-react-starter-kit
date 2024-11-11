@@ -24,25 +24,24 @@ class AdminSeeder extends Seeder
 
         Role::create(['name' => 'seller']);
 
-        $admin = User::factory()->create([
-                'name' => 'Admin',
-                'email' => 'admin@admin.com',
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'),
-                'remember_token' => Str::random(10),
-        ]);
+        // $admin = User::factory()->create([
+        //         'name' => 'Admin',
+        //         'email' => 'admin@admin.com',
+        //         'email_verified_at' => now(),
+        //         'password' => Hash::make('password'),
+        //         'remember_token' => Str::random(10),
+        // ]);
 
-        $admin->assignRole('admin');
+        // $admin->assignRole('admin');
 
-        $seller = User::factory()->create([
-            'name' => 'Seller',
-            'email' => 'seller@seller.com',
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
-        ]);
+        // $seller = User::factory()->create([
+        //     'name' => 'nadetest.myshopify.com',
+        //     'email' => 'shop@nadetest.myshopify.com',
+        //     'email_verified_at' => now(),
+        //     'password' => Hash::make('password'),
+        //     'remember_token' => Str::random(10),
+        // ]);
 
-        $seller->assignRole('seller');
-
+        // $seller->assignRole('seller');
     }
 }

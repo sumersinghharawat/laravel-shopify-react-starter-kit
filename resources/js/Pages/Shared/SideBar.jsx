@@ -1,8 +1,9 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import React from 'react';
 
 function SideBar() {
 
+    const auth = usePage().props.auth;
 
     async function deleteApp() {
         const confirmation = confirm('Are you sure you want to uninstall the app?');

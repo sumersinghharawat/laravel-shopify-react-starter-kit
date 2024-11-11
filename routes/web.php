@@ -3,6 +3,7 @@
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\InstallAppController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SellerController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ Route::group(['middleware' => ['verify.embedded', 'verify.shopify', 'role:vendor
 
     Route::get('/vendor/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
 
-    Route::get('/vendor/products', [VendorController::class, 'products'])->name('vendor.products');
+    Route::get('/vendor/products/{afterpage?}', [VendorController::class, 'products'])->name('vendor.products');
 
     Route::post('/vendor/import-products', [VendorController::class, 'importproduct'])->name('vendor.importproduct');
 
@@ -29,7 +30,26 @@ Route::group(['middleware' => ['verify.embedded', 'verify.shopify', 'role:vendor
 });
 
 
-Route::group(['middleware' => ['role:admin']], function () {
+Route::group(['middleware' => ['verify.embedded', 'verify.shopify', 'role:seller']], function () {
+
+    // Route::get('/', [ProfileController::class, 'welcome'])->name('home');
+
+    Route::get('/seller/dashboard', [SellerController::class, 'index'])->name('seller.dashboard');
+
+    Route::get('/seller/products', [SellerController::class, 'products'])->name('seller.products');
+
+    Route::post('/seller/import-products', [SellerController::class, 'importproduct'])->name('seller.importproduct');
+
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+
+});
+
+
+Route::group(['middleware' => ['role:seller']], function () {
 
     Route::get('/dashboard', [ProfileController::class, 'index'])->name('dashboard');
 

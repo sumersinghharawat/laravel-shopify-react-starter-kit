@@ -10,15 +10,21 @@ class ShopifyAPIFunc extends Controller
 {
     //
 
-    public function get_products($page = 1, $count = 10)
+    public function get_products($count = 10, $after="" )
     {
 
         $user = Auth::user();
 
-        $page = $count * ($page - 1);
+        if($after){
+            $pagination = 'first: '.$count.' after: "'.$after.'"';
+        }else{
+            $pagination = 'first: '.$count;
+        }
+
+        // dd($after);
 
         $query = "query {
-                    products(first: $count) {
+                    products($pagination) {
                         nodes {
                         id
                         handle
@@ -68,7 +74,16 @@ class ShopifyAPIFunc extends Controller
                             }
                         }
                         }
+                        pageInfo {
+                        endCursor
+                        hasNextPage
+                        hasPreviousPage
+                        startCursor
+                        }
                     }
+                        productsCount {
+                            count
+                        }
                     }
 
 
@@ -78,7 +93,25 @@ class ShopifyAPIFunc extends Controller
 
         $response = $response->json();
 
-        return $products = $response['data']['products']['nodes'];
+        // dd($response);
+
+        return $products = $response['data'];
+    }
+
+    public function getTotalProductCount()
+    {
+        $query = "query {
+                    products {
+                        totalCount
+                    }
+                }";
+
+        $response = $this->getResponseFromShopify($query);
+        $response = $response->json();
+
+        dd($response);
+
+        return $response['data']['products']['totalCount'];
     }
 
     public function getResponseFromShopify($query)

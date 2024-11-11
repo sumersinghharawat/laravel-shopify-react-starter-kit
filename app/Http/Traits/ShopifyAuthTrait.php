@@ -32,7 +32,9 @@ trait ShopifyAuthTrait
     {
         if ($request->missing('shop') && !$request->user()) {
             // One or the other is required to authenticate a shop
-            throw new MissingShopDomainException('No authenticated user or shop domain');
+            // throw new MissingShopDomainException('No authenticated user or shop domain');
+
+            return Redirect::route('login');
         }
 
         // Get the shop domain
@@ -84,6 +86,10 @@ trait ShopifyAuthTrait
 
             $user = User::find($user_id);
 
+            $roles = $user->getRoleNames();
+
+            dd($roles);
+
             $user->assignRole('vendor');
 
             return redirect()->intended(RouteServiceProvider::$home);
@@ -120,6 +126,12 @@ trait ShopifyAuthTrait
         $user = User::firstWhere('name', $shopDomain->toNative());
 
         auth()->login($user);
+
+
+        $roles = $user->getRoleNames();
+
+        dd($roles);
+
 
         $user->assignRole('vendor');
 

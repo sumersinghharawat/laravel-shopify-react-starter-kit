@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-class VendorController extends Controller
+class SellerController extends Controller
 {
     //
 
@@ -14,39 +14,24 @@ class VendorController extends Controller
     public function index()
     {
 
-        if(!Auth::user()->hasRole('vendor')){
+        if(!Auth::user()->hasRole('seller')){
             return redirect(route('home'));
         }
 
-        return Inertia::render('Vendor/Dashboard');
+        $auth = Auth::user();
+
+
+
+        return Inertia::render('Seller/Dashboard', ['auth' => $auth]);
     }
 
-    public function products($afterpage = null)
+    public function products()
     {
         if(!Auth::user()->hasRole('vendor')){
             return redirect(route('home'));
         }
 
-        // dd($afterpage);
-
-        if($afterpage){
-            // $afterpage = $afterpage;
-            $getProducts = (new ShopifyAPIFunc)->get_products(10, $afterpage);
-        }else{
-            // $afterpage = 1;
-            $getProducts = (new ShopifyAPIFunc)->get_products(10, '');
-        }
-
-
-        // dd($getProducts);
-
-        $products = $getProducts['products']['nodes'];
-
-        $productsCount = $getProducts['productsCount']['count'];
-
-        $pageInfo = $getProducts['products']['pageInfo'];
-
-        // $totalProductCount = (new ShopifyAPIFunc)->getTotalProductCount();
+        $products = (new ShopifyAPIFunc)->get_products();
 
         foreach ($products as $key => $product) {
             $products[$key]['id'] = $product['id'];
@@ -65,23 +50,19 @@ class VendorController extends Controller
             $products[$key]['images'] = array_map(function($image) {
                 return $image['node']['url'];
             }, $product['images']['edges']);
-            $products[$key]['featuredImage'] = $product['featuredImage']['url']??[];
+            $products[$key]['featuredImage'] = $product['featuredImage']['url'];
             $products[$key]['variants'] = array_map(function($variant) {
                 return [
                     'id' => $variant['node']['id'],
                     'title' => $variant['node']['title'],
                     'price' => $variant['node']['price'],
-                    'featuredImage' => $variant['node']['product']['featuredImage']['url']??[]
+                    'featuredImage' => $variant['node']['product']['featuredImage']['url']
                 ];
             }, $product['variants']['edges']);
         }
 
-
-
         return Inertia::render('Vendor/Products',[
-            'products' => $products,
-            'pageInfo' => $pageInfo,
-            'productsCount' => $productsCount
+            'products' => $products
         ]);
     }
 
