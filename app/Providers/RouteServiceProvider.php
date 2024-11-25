@@ -24,8 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Set the home path based on the environment variable
-        self::$home = env('SHOPIFY_APPBRIDGE_ENABLED') ? '/' : '/home';
+        self::$home = '/' ;
 
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());

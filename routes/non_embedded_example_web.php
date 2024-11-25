@@ -24,7 +24,7 @@ if (!config('shopify-app.appbridge_enabled')) {
         ->name(Util::getShopifyConfig('route_names.authenticate.token'));
 }
 
-Route::get('/home', function () {
+Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),

@@ -406,22 +406,35 @@ return [
     */
 
     'webhooks' => [
-        /*
-            [
-                'topic' => env('SHOPIFY_WEBHOOK_1_TOPIC', 'ORDERS_CREATE'),
-                'address' => env('SHOPIFY_WEBHOOK_1_ADDRESS', 'https://some-app.com/webhook/orders-create')
-            ], [
-                'topic' => env('SHOPIFY_WEBHOOK_2_TOPIC', 'APP_PURCHASES_ONE_TIME_UPDATE'),
-                'address' => env('SHOPIFY_WEBHOOK_2_ADDRESS', 'https://some-app.com/webhook/purchase'),
-            ]
-            // In certain situations you may wish to map the webhook to a specific class
-            // To do this, change the array to an associative array with a 'class' key
-            'orders-create' => [
-                'topic' => env('SHOPIFY_WEBHOOK_3_TOPIC', 'ORDERS_PAID'),
-                'address' => env('SHOPIFY_WEBHOOK_3_ADDRESS', 'https://some-app.com/webhook/orders-create'),
-                'class' => \App\Shopify\Actions\ExampleAppJob::class
-            ],
-        */],
+        [
+            'topic' => env('SHOPIFY_WEBHOOK_1_TOPIC', ''),
+            'address' => env('SHOPIFY_WEBHOOK_1_ADDRESS', '')
+        ],
+        [
+            'topic' => env('SHOPIFY_WEBHOOK_2_TOPIC', ''),
+            'address' => env('SHOPIFY_WEBHOOK_2_ADDRESS', ''),
+        ],
+        [
+            'topic' => env('SHOPIFY_WEBHOOK_3_TOPIC', ''),
+            'address' => env('SHOPIFY_WEBHOOK_3_ADDRESS', ''),
+        ],
+        [
+            'topic' => env('SHOPIFY_WEBHOOK_4_TOPIC', ''),
+            'address' => env('SHOPIFY_WEBHOOK_4_ADDRESS', ''),
+        ],
+        [
+            'topic' => env('SHOPIFY_WEBHOOK_5_TOPIC', ''),
+            'address' => env('SHOPIFY_WEBHOOK_5_ADDRESS', ''),
+        ],
+        [
+            'topic' => env('SHOPIFY_WEBHOOK_6_TOPIC', ''),
+            'address' => env('SHOPIFY_WEBHOOK_6_ADDRESS', ''),
+        ],
+        [
+            'topic' => env('SHOPIFY_WEBHOOK_7_TOPIC', ''),
+            'address' => env('SHOPIFY_WEBHOOK_7_ADDRESS', ''),
+        ]
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -440,7 +453,8 @@ return [
                 'display_scope' => env('SHOPIFY_SCRIPTTAG_1_DISPLAY_SCOPE', 'online_store')
             ],
             ...
-        */],
+        */
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -464,7 +478,8 @@ return [
                 'job' => env('AFTER_AUTHENTICATE_JOB'), // example: \App\Jobs\AfterAuthorizeJob::class
                 'inline' => env('AFTER_AUTHENTICATE_JOB_INLINE', false) // False = dispatch job for later, true = dispatch immediately
             ],
-        */],
+        */
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -537,25 +552,25 @@ return [
 
     'models' => [
         /*
-        * The fully qualified class name of the Charge model.
-        */
+         * The fully qualified class name of the Charge model.
+         */
         'charge' => Osiset\ShopifyApp\Storage\Models\Charge::class,
 
         /*
-        * The fully qualified class name of the Plan model.
-        */
+         * The fully qualified class name of the Plan model.
+         */
         'plan' => Osiset\ShopifyApp\Storage\Models\Plan::class,
     ],
 
     'table_names' => [
         /*
-        * The table name for Charge model.
-        */
+         * The table name for Charge model.
+         */
         'charges' => 'charges',
 
         /*
-        * The table name for Plan model.
-        */
+         * The table name for Plan model.
+         */
         'plans' => 'plans',
 
         /*
