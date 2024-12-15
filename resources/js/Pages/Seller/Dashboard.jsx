@@ -1,6 +1,9 @@
 import SideBar from "../Shared/SideBar";
 
 export default function Dashboard({auth}) {
+
+
+
     return (<>
 
         <SideBar />

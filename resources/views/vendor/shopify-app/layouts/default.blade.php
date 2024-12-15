@@ -27,10 +27,41 @@
             var actions = AppBridge.actions;
             var utils = AppBridge.utilities;
             var createApp = AppBridge.default;
+            var AppLink = AppBridge.actions.AppLink;
+            var NavigationMenu = AppBridge.actions.NavigationMenu;
+
+
+
             var app = createApp({
                 apiKey: "{{ \Osiset\ShopifyApp\Util::getShopifyConfig('api_key', $shopDomain ?? Auth::user()->name) }}",
                 host: "{{ \Request::get('host') }}",
                 forceRedirect: true,
+            });
+
+
+            // const indexLink = AppLink.create(app, {
+            //     label: 'Dashboard',
+            //     destination: '/',
+            // });
+
+            // const dashboardLink = AppLink.create(app, {
+            //     label: 'Dashboard',
+            //     destination: '/vendor/dashboard',
+            // });
+
+
+            const productsLink = AppLink.create(app, {
+                label: 'Products',
+                destination: '/vendor/products',
+            });
+
+            const settingsLink = AppLink.create(app, {
+                label: 'Settings',
+                destination: '/settings',
+            });
+
+            const navigationMenu = NavigationMenu.create(app, {
+                items: [productsLink, settingsLink],
             });
 
             const {

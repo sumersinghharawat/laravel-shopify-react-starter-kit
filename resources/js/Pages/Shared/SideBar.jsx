@@ -1,34 +1,25 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import React from 'react';
 
 function SideBar() {
 
     const auth = usePage().props.auth;
 
-    async function deleteApp() {
-        const confirmation = confirm('Are you sure you want to uninstall the app?');
+    async function logoutSeller() {
+        const confirmation = confirm('Are you sure you want to log out?');
 
         if (!confirmation) return;
 
-        try {
-            const response = await fetch('/app/uninstall', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                }
-            });
-
-            if (response.ok) {
-                alert('App uninstalled successfully.');
+        router.post(route('seller.logout'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                alert('Logged out successfully.');
                 window.location.href = '/'; // Redirect to a different page if needed
-            } else {
-                alert('Error uninstalling app.');
+            },
+            onError: () => {
+                alert('Error logging out.');
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to uninstall app. Please try again.');
-        }
+        });
     }
 
 
@@ -66,7 +57,7 @@ function SideBar() {
                     <ul className="space-y-2 font-medium">
                         <li>
                             <Link
-                                href={route('vendor.dashboard')}
+                                href={route('seller.dashboard')}
                                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                             >
                                 <svg
@@ -84,7 +75,7 @@ function SideBar() {
                         </li>
                         {/* Product Link */}
                         <li>
-                            <Link href={route('vendor.products')} className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <Link href={route('seller.products')} className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                 <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M16 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM5 5h10v3H5V5zm10 5v5H5v-5h10z" />
                                 </svg>
@@ -114,12 +105,12 @@ function SideBar() {
 
                         {/* Logout Link */}
                         <li>
-                            <a onClick={()=>deleteApp()} className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <a onClick={()=>logoutSeller()} className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                 <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M7 10a1 1 0 0 1 1-1h5.586l-1.293-1.293a1 1 0 0 1 1.414-1.414l3 3a1 1 0 0 1 0 1.414l-3 3a1 1 0 0 1-1.414-1.414L13.586 11H8a1 1 0 0 1-1-1z" />
                                     <path d="M3 2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h9a1 1 0 1 0 0-2H4V4h8a1 1 0 1 0 0-2H3z" />
                                 </svg>
-                                <span className="flex-1 ms-3 whitespace-nowrap">Uninstall</span>
+                                <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
                             </a>
                         </li>
                         {/* Repeat similar structure for other sidebar links */}

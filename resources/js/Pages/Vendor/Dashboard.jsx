@@ -1,32 +1,84 @@
-import SideBar from "../Shared/SideBar";
+import { Link, usePage } from '@inertiajs/react';
+import { Stack, Box, Typography, Grid } from '@mui/material';
+import {
+    Badge,
+    ButtonGroup,
+    FullscreenBar,
+    Button,
+    Text,
+    Card
+} from '@shopify/polaris';
+import { useState, useCallback, useEffect } from 'react';
 
-export default function Dashboard() {
-    return (<>
+export default function Dashboard(props) {
 
-        <SideBar />
+    const auth = usePage().props.auth;
 
-        <div className="p-4 sm:ml-64">
-            <div className="p-4 rounded-lg dark:border-gray-700">
-                <div className="grid grid-cols-3 gap-4">
-                    {/* Total Import Product */}
-                    <div className="flex flex-col items-center justify-center h-40 rounded bg-gray-50 dark:bg-gray-800">
-                        <p className="mb-2 text-2xl text-gray-400 dark:text-gray-500">Total Import Products</p>
-                        <p className="mt-2 text-lg font-semibold text-gray-600 dark:text-gray-300">150</p> {/* Example count */}
-                    </div>
+    const [isFullscreen, setFullscreen] = useState(true);
 
-                    {/* Total Orders */}
-                    <div className="flex flex-col items-center justify-center h-40 rounded bg-gray-50 dark:bg-gray-800">
-                        <p className="mb-2 text-2xl text-gray-400 dark:text-gray-500">Total Orders</p>
-                        <p className="mt-2 text-lg font-semibold text-gray-600 dark:text-gray-300">320</p> {/* Example count */}
-                    </div>
+    const handleActionClick = useCallback(() => {
+        setFullscreen(false);
+    }, []);
 
-                    {/* Total Earning */}
-                    <div className="flex flex-col items-center justify-center h-40 rounded bg-gray-50 dark:bg-gray-800">
-                        <p className="mb-2 text-2xl text-gray-400 dark:text-gray-500">Total Earning</p>
-                        <p className="mt-2 text-lg font-semibold text-gray-600 dark:text-gray-300">$12,000</p> {/* Example earning */}
-                    </div>
+    useEffect(() => {
+        console.log(props.productsData.productsCount);
+    }, [auth]);
+
+    const fullscreenBarMarkup = (
+        <div className='p-2 bg-white'>
+            <div
+                style={{
+                    display: 'flex',
+                    flexGrow: 1,
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}
+            >
+                <div style={{ marginLeft: '1rem', flexGrow: 1 }}>
+                    <Text variant="headingLg" as="p">
+                        Vendor Dashboard
+                    </Text>
                 </div>
+                {/* <ButtonGroup>
+                    <Button onClick={() => {}}>Secondary Action</Button>
+                    <Button variant="primary" onClick={() => {}}>
+                        Primary Action
+                    </Button>
+                </ButtonGroup> */}
             </div>
         </div>
-    </>);
+    );
+
+    const stats = [
+        { title: 'Total Products', value: props.productsData.productsCount, link: route('vendor.products') },
+        { title: 'Total Import Products', value: props.productsData.importproducts.length, link: '#' },
+        { title: 'Total Earnings', value: '$0', link: '#' },
+        { title: 'Total Orders', value: 0, link: '#' },
+    ];
+
+    return (
+        <div style={{ padding: '2rem', width: '100%' }}>
+            {isFullscreen && fullscreenBarMarkup}
+            <Box style={{ marginTop: '1rem' }}>
+                <Grid container spacing={3}>
+                    {stats.map((stat, index) => (
+                        <Grid item xs={12} sm={6} md={3} key={index}>
+                            <Link href={stat.link} className="no-underline">
+                                <Card>
+                                    <Box style={{ padding: '1rem', textAlign: 'center', cursor: 'pointer' }}>
+                                        <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+                                            {stat.title}
+                                        </Typography>
+                                        <Typography variant="h4" style={{ color: '#007BFF' }}>
+                                            {stat.value}
+                                        </Typography>
+                                    </Box>
+                                </Card>
+                            </Link>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
+        </div>
+    );
 }

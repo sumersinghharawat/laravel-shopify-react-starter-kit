@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductManagement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -20,7 +21,9 @@ class SellerController extends Controller
 
         $auth = Auth::user();
 
+        $importedProducts = (new ProductManagement())->getProducts();
 
+        dd($importedProducts);
 
         return Inertia::render('Seller/Dashboard', ['auth' => $auth]);
     }
@@ -73,4 +76,35 @@ class SellerController extends Controller
 
         dd($request);
     }
+
+    public function seller_login_create(){
+
+        return Inertia::render('Seller/Login');
+    }
+
+    public function seller_login_store(Request $request){
+
+        $validation = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if(Auth::attempt($validation)){
+            return redirect(route('seller.dashboard'));
+        }
+
+        return Inertia::render('Seller/Login',[
+            'errors' => collect([
+            'email' => 'The provided credentials do not match our records.',
+            'password' => 'The provided credentials do not match our records.'
+            ])
+        ]);
+    }
+
+    public function seller_logout()
+    {
+        Auth::logout();
+        return redirect(route('seller.login'));
+    }
+
 }

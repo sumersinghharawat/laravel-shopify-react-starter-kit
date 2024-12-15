@@ -16,26 +16,37 @@ class VerifyEmbedded
      */
     public function handle(Request $request, Closure $next): Response
     {
+
+
         if(!$request->get('shop')) {
             $auth = Auth::user();
 
             if($auth){
-                $auth->assignRole('vendor');
-            }else{
 
+                $user = Auth::user();
+                $roles = $user->getRoleNames();
+
+                if(!count( $roles)){
+                    $auth->assignRole('vendor');
+                }else{
+                    // return redirect(route($roles[0].'.dashboard'));
+                    // dd($roles);
+                }
+            }else{
                 // dd($request->all());
                 // return redirect()->route('home', ['shop' => $request->get('shop')]);
             }
         }else{
-
             if(Auth::check()){
 
                 $user = Auth::user();
-
                 $roles = $user->getRoleNames();
 
                 if(!count( $roles)){
                     $user->assignRole('vendor');
+                }else{
+                    // dd($roles[0].'.dashboard');
+                    // return redirect(route($roles[0].'.dashboard', absolute: false));
                 }
             }
         }

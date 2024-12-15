@@ -16,7 +16,11 @@ class InstallAppController extends Controller
     public function index(){
 
         if(Auth::check()){
-            return redirect()->route('dashboard');
+
+            $auth = Auth::user();
+
+            // dd($auth->getRoleNames());
+            // return redirect()->route('seller/dashboard');
         }
 
         return Inertia::render('ShopifyApp/InstallApp');

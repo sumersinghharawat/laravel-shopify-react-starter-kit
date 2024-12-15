@@ -29,7 +29,17 @@ class ProfileController extends Controller
 
             $roles = $user->getRoleNames();
 
-            // return redirect(route($roles[0].'.dashboard'));
+            // dd($roles[0]);
+
+            // return redirect(route($roles[0].'.dashboard', absolute: false));
+            // return Redirect::route($roles[0].'.dashboard');
+
+            // return Inertia::render('Vendor/Dashboard');
+
+
+            return (new VendorController)->index();
+
+
         }
 
         return Inertia::render('Welcome', [

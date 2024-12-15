@@ -88,9 +88,9 @@ trait ShopifyAuthTrait
 
             $roles = $user->getRoleNames();
 
-            dd($roles);
+            // dd($roles);
 
-            $user->assignRole('vendor');
+            // $user->assignRole('vendor');
 
             return redirect()->intended(RouteServiceProvider::$home);
 
@@ -130,10 +130,10 @@ trait ShopifyAuthTrait
 
         $roles = $user->getRoleNames();
 
-        dd($roles);
+        // dd($roles);
 
 
-        $user->assignRole('vendor');
+        // $user->assignRole('vendor');
 
         return redirect()->intended(RouteServiceProvider::$home);
     }

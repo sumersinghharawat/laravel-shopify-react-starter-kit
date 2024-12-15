@@ -21,13 +21,13 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
     useEffect(() => {
         // if (document.cookie.includes('visited')) {
             if (auth.user) {
-                router.get(route(auth.user.roles[0].name+'.dashboard'));
+                return router.get(route(auth.user.roles[0].name+'.dashboard'));
             }
         // }else{
         //     document.cookie = "visited=true; path=/";
         // }
 
-    },[]);
+    });
 
     const handleGetStartedClick = () => {
 

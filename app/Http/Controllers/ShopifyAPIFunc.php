@@ -10,13 +10,17 @@ class ShopifyAPIFunc extends Controller
 {
     //
 
-    public function get_products($count = 10, $after="" )
+    public function getProducts($count = 10, $after="", $before="")
     {
 
         $user = Auth::user();
 
-        if($after){
+        if($after && $before){
+            $pagination = 'first: '.$count.' after: "'.$after.'" before: "'.$before.'"';
+        }elseif($after){
             $pagination = 'first: '.$count.' after: "'.$after.'"';
+        }elseif($before){
+            $pagination = 'first: '.$count.' before: "'.$before.'"';
         }else{
             $pagination = 'first: '.$count;
         }
@@ -109,7 +113,7 @@ class ShopifyAPIFunc extends Controller
         $response = $this->getResponseFromShopify($query);
         $response = $response->json();
 
-        dd($response);
+        // dd($response);
 
         return $response['data']['products']['totalCount'];
     }
@@ -134,5 +138,78 @@ class ShopifyAPIFunc extends Controller
         ]);
     }
 
+    public function getProduct($product_id)
+    {
+
+        // dd($product_id);
+
+        $product_id = $product_id['product_id'];
+
+        $query = 'query {
+                    product(id: "'.$product_id.'") {
+                        id
+                        handle
+                        title
+                        description
+                        totalInventory
+                        priceRange {
+                            maxVariantPrice {
+                            amount
+                            currencyCode
+                            }
+                            minVariantPrice {
+                            amount
+                            currencyCode
+                            }
+                        }
+                        collections(first: 250) {
+                            edges {
+                            node {
+                                id
+                                title
+                            }
+                            }
+                        }
+                        images(first: 10) {
+                            edges {
+                            node {
+                                url
+                            }
+                            }
+                        }
+                        featuredImage {
+                            url
+                        }
+                        variants(first: 250) {
+                            edges {
+                            node {
+                                id
+                                title
+                                product {
+                                featuredImage {
+                                    url
+                                }
+                                }
+                                price
+                            }
+                            }
+                        }
+                    }
+                }';
+
+            $response = $this->getResponseFromShopify($query);
+            $response = $response->json();
+
+            return $response['data']['product'];
+
+    }
+
+    public function getImportedProductIds(): array
+    {
+        return $this->whereNotNull('shopify_product_id')
+                    ->pluck('shopify_product_id')
+                    ->toArray();
+    }
 
 }
+

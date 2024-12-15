@@ -16,7 +16,7 @@ export default function Login({ status, canResetPassword }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('login'), {
+        post(route('seller.login'), {
             onFinish: () => reset('password'),
         });
     };
@@ -24,19 +24,6 @@ export default function Login({ status, canResetPassword }) {
     return (
         <GuestLayout>
             <Head title="Log in" />
-
-
-
-            <div className="flex flex-col items-center justify-center mt-4">
-                <h2 style={{ fontSize: '2rem', marginBottom: '2rem' }}>For Vendors</h2>
-                <Link
-                            href={route('shopify-app.install')}
-                            className="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                    Install App
-                </Link>
-                <span className='py-6 mb-4 text-lg text-gray-600'>Or</span>
-            </div>
 
             {status && (
                 <div className="mb-4 text-sm font-medium text-green-600">

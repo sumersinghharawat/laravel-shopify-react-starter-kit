@@ -45,8 +45,17 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+        $user = Auth::user();
+        $roles = $user->getRoleNames();
 
-        $user->assignRole('vendor');
+        if(!count( $roles)){
+            $user->assignRole('vendor');
+        }else{
+            dd($roles);
+            // return Redirect::route($roles[0].'.dashboard');
+        }
+
+        // $user->assignRole('vendor');
 
         return redirect(route('dashboard', absolute: false));
     }
