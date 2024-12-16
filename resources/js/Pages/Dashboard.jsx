@@ -1,301 +1,129 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, usePage } from '@inertiajs/react';
-import { Button, Card, Grid, Select, Spinner, TextField } from '@shopify/polaris';
-import { useState } from 'react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { Button, Card, Grid, Pagination, Select, Spinner, TextField } from '@shopify/polaris';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import MonacoEditor from "@monaco-editor/react";
 
-export default function Dashboard() {
+export default function Dashboard({marg, products}) {
 
-    const [disabled, setDisabled] = useState(false);
+    const [productSyncModal, setProductSyncModal] = useState(false);
 
-    const [hideProductId, setHideProductId] = useState(true)
+    const [margProductList, setMargProductList] = useState(marg.Details.pro_N);
 
-    const [hideProductHandle, setHideProductHandle] = useState(true)
+    const [currentProductName, setCurrentProductName] = useState(null);
+    const [currentProductCode, setCurrentProductCode] = useState(null);
 
-    const [productId, setProductId] = useState();
+    useEffect(() => {
+        // console.log(productsData);
+    }, [marg]);
 
-    const [productHandle, setProductHandle] = useState();
-
-    const [productQueries, setProductQueries] = useState([
-        { label: 'Get Products', value: 'all' },
-        { label: 'Get Product By Id', value: 'by_id' },
-        { label: 'Get Product By Handle', value: 'by_handle' },
-    ])
-
-    const [Queries, setQueries] = useState([
-        { label: 'Products', value: 'products' },
-        { label: 'Product Variants', value: 'variants' },
-    ])
-
-    const [fetchedProducts, setFetchedProducts] = useState()
-
-    const [selectedProductQuery, setSelectedProductQuery] = useState('');
-
-    const [selectedQuery, setSelectedQuery] = useState('');
-
-    const handleProductQueryChange = (value) => {
-
-        setSelectedProductQuery(value)
-        setFetchedProducts()
-        setHideProductId(true);
-        setProductId();
-        setHideProductHandle(true);
-        setProductHandle();
-        if (value === 'all') {
-            setDisabled(true);
-            const promise = new Promise((resolve, reject) => {
-                setTimeout(async () => {
-                    await fetch(route('get.products'), {
-                        method: 'GET',
-                    }).then(async (response) => {
-                        var results = await response.json()
-                        if (results.success) {
-                            setFetchedProducts(results.data);
-                            resolve(results.message);
-                        }
-                        else {
-                            reject(results.message);
-                        }
-                    }).catch(reject);
-                }, 2000);
-            });
-            toast.promise(
-                promise,
-                {
-                    loading: 'Fetching Products.......',
-                    success: (data) => `${data} Successfully`,
-                    error: (err) => `This just happened because: ${err.toString()}`,
-                },
-                {
-                    style: {
-                        minWidth: '250px',
-                    },
-                    success: {
-                        duration: 5000,
-                    },
-                    error: {
-                        duration: 5000,
-                    },
-                }
-            ).then(() => {
-                setDisabled(false)
-            }).catch((error) => {
-                setDisabled(false)
-                console.error("An error occurred:", error);
-            });
-        }
-        if (value === 'by_id') {
-            setHideProductId(false);
-        }
-        if (value === 'by_handle') {
-            setHideProductHandle(false);
-        }
-
+    const handleGetProductCode = (product_code, product_name) => {
+        setProductSyncModal(true);
+        setCurrentProductCode(product_code);
+        setCurrentProductName(product_name);
+        console.log(product_code);
     }
 
-    const handleFetchProductById = () => {
-
-        setDisabled(true);
-        const promise = new Promise((resolve, reject) => {
-            setTimeout(async () => {
-                await fetch(route('get.product', { 'id': productId }), {
-                    method: 'GET',
-                }).then(async (response) => {
-                    var results = await response.json()
-                    if (results.success) {
-                        setFetchedProducts(results.data);
-                        resolve(results.message);
-                    }
-                    else {
-                        reject(results.message);
-                    }
-                }).catch(reject);
-            }, 2000);
-        });
-        toast.promise(
-            promise,
-            {
-                loading: 'Fetching Product.......',
-                success: (data) => `${data} Successfully`,
-                error: (err) => `This just happened because: ${err.toString()}`,
-            },
-            {
-                style: {
-                    minWidth: '250px',
-                },
-                success: {
-                    duration: 5000,
-                },
-                error: {
-                    duration: 5000,
-                },
-            }
-        ).then(() => {
-            setDisabled(false)
-        }).catch((error) => {
-            setDisabled(false)
-            console.error("An error occurred:", error);
-        });
-
+    const handleSyncProduct = () => {
+        setProductSyncModal(false);
     }
 
-    const handleFetchProductByHandle = () => {
-
-        setDisabled(true);
-        const promise = new Promise((resolve, reject) => {
-            setTimeout(async () => {
-                await fetch(route('get.product.handle', { 'handle': productHandle }), {
-                    method: 'GET',
-                }).then(async (response) => {
-                    var results = await response.json()
-                    if (results.success) {
-                        setFetchedProducts(results.data);
-                        resolve(results.message);
-                    }
-                    else {
-                        reject(results.message);
-                    }
-                }).catch(reject);
-            }, 2000);
-        });
-        toast.promise(
-            promise,
-            {
-                loading: 'Fetching Product.......',
-                success: (data) => `${data} Successfully`,
-                error: (err) => `This just happened because: ${err.toString()}`,
-            },
-            {
-                style: {
-                    minWidth: '250px',
-                },
-                success: {
-                    duration: 5000,
-                },
-                error: {
-                    duration: 5000,
-                },
-            }
-        ).then(() => {
-            setDisabled(false)
-        }).catch((error) => {
-            setDisabled(false)
-            console.error("An error occurred:", error);
-        });
-
-    }
+    const productsData = products.products.nodes.map((product) => {
+        return {
+            id: product.id,
+            title: product.title,
+            handle: product.handle,
+            price: product.priceRange.minVariantPrice.amount,
+            quantity: product.totalInventory,
+        }
+    })
 
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Dashboard
-                </h2>
-            }
-        >
-            <Head title="Dashboard" />
-
+        <AuthenticatedLayout >
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            You're logged in!
-                        </div>
+                    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" className="px-6 py-3">
+                                        Product No.
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Product Name
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        P Price
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Price
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Quantity
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Company
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {margProductList.map((product, index) => (
+                                    <tr key={product.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <td className="px-6 py-4">{product.code}</td>
+                                        <td className="px-6 py-4">{product.name}</td>
+                                        <td className="px-6 py-4">{product.PRate}</td>
+                                        <td className="px-6 py-4">{product.Rate}</td>
+                                        <td className="px-6 py-4">{product.stock}</td>
+                                        <td className="px-6 py-4">{product.company}</td>
+                                        <td className="px-6 py-4">
+                                            <Button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                onClick={() => handleGetProductCode(product.code, product.name)}
+                                            >
+                                                Sync
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
-                    <Card>
-                        <Select
-                            label="Queries"
-                            options={Queries}
-                            onChange={setSelectedQuery}
-                            value={selectedQuery}
-                            placeholder='Select a Query'
-                        />
-                    </Card>
-                    {
-                        selectedQuery === 'products' ?
-                            <Card>
-                                <h3 className="text-lg font-medium leading-6 text-gray-900 my-4">
-                                    Products
-                                </h3>
-                                <Grid>
-                                    <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
-                                        <Card title="Sales" sectioned>
-                                            <Select
-                                                label="Product Queries"
-                                                options={productQueries}
-                                                onChange={handleProductQueryChange}
-                                                value={selectedProductQuery}
-                                                placeholder='Select a product query'
-                                                disabled={disabled}
-                                            />
-                                        </Card>
-                                        {
-                                            !hideProductId &&
-                                            <Card>
-                                                <TextField
-                                                    label="Product ID"
-                                                    type="number"
-                                                    placeholder="Enter Product ID"
-                                                    disabled={disabled}
-                                                    value={productId}
-                                                    onChange={setProductId}
-                                                />
-                                                <Button
-                                                    primary
-                                                    loading={disabled}
-                                                    onClick={handleFetchProductById}
-                                                >Submit</Button>
-                                            </Card>
-                                        }
-                                        {
-                                            !hideProductHandle &&
-                                            <Card>
-                                                <TextField
-                                                    label="Product Handle"
-                                                    type="text"
-                                                    placeholder="Enter Product Handle"
-                                                    disabled={disabled}
-                                                    value={productHandle}
-                                                    onChange={setProductHandle}
-                                                />
-                                                <Button
-                                                    primary
-                                                    loading={disabled}
-                                                    onClick={handleFetchProductByHandle}
-                                                >Submit</Button>
-                                            </Card>
-                                        }
-                                    </Grid.Cell>
-                                    <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
-                                        <Card title="Orders" sectioned>
-                                            {
-                                                fetchedProducts ?
-                                                    <MonacoEditor
-                                                        height="500px"
-                                                        defaultLanguage="json"
-                                                        theme="vs-dark"
-                                                        defaultValue={JSON.stringify(fetchedProducts, null, 2)}
-                                                    />
-                                                    :
-                                                    'Nothing to Show'
-                                            }
-                                        </Card>
-                                    </Grid.Cell>
-                                </Grid>
-                            </Card>
-                            :
-                            selectedQuery === "variants" ?
-                                <Card>
-                                    <h3 className="text-lg font-medium leading-6 text-gray-900 my-4">
-                                        Variants
-                                    </h3>
-                                </Card>
-                                :
-                                null
-                    }
                 </div>
             </div>
+            {productSyncModal && (
+                <div className='fixed inset-0 z-50 flex items-center justify-center'>
+                    <div className='fixed inset-0 bg-black opacity-50' onClick={() => setProductSyncModal(false)}></div>
+                    <div className='z-50 p-6 bg-white rounded-lg shadow'>
+                        <h2 className='mb-4 text-lg font-semibold'>Sync Product with Shopify</h2>
+                        <div className='mb-4'>
+                            <TextField
+                                label={'Product code'}
+                                value={currentProductCode}
+                                onChange={() => console.log('Product Name')}
+                                readOnly
+                            />
+                        </div>
+                        <div className='mb-4'>
+                            <TextField
+                                label={'Product name'}
+                                value={currentProductName}
+                                onChange={() => console.log('Product Name')}
+                                readOnly
+                            />
+                        </div>
+                        <div className='mb-4'>
+                            <Select
+                                label="Select Shopify Product"
+                                options={productsData.map((product) => ({ value: product.handle, label: product.title }))}
+                                onChange={(value) => console.log(`Selected: ${value}`)}
+                            />
+                        </div>
+                        <Button onClick={() => console.log('Syncing with Shopify')}>Sync Now</Button>
+                    </div>
+                </div>
+            )}
         </AuthenticatedLayout>
     );
 }
